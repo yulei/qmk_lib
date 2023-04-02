@@ -12,6 +12,7 @@
 void qmk_driver_init(void)
 {
     keyboard_setup();
+    keyboard_init();
 }
 
 void qmk_driver_task(void)
