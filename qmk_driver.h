@@ -16,5 +16,10 @@
 #include "keyboard.h"
 #include "wait.h"
 
+#ifdef NKRO_AUTO_ENABLE
+#include "keycode_config.h"
+extern keymap_config_t keymap_config;
+#endif
+
 void qmk_driver_init(void);
 void qmk_driver_task(void);

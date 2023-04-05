@@ -7,7 +7,9 @@
  */
 
 #include "qmk_driver.h"
-#include "quantum/keyboard.h"
+#include "keyboard.h"
+
+uint8_t keyboard_protocol = 1;
 
 void qmk_driver_init(void)
 {
