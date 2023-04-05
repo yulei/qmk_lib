@@ -30,7 +30,7 @@ GENERIC_FEATURES = \
     DYNAMIC_TAPPING_TERM \
 
 define HANDLE_GENERIC_FEATURE
-#    $$(info "Processing: $1_ENABLE $2.c")
+    $$(info "Processing: $1_ENABLE $2.c")
     SRCS += $$(wildcard $$(QMK_DIR)/quantum/process_keycode/process_$2.c)
     SRCS += $$(wildcard $$(QMK_DIR)/quantum/$2.c)
     APP_DEFS += -D$1_ENABLE
@@ -41,3 +41,9 @@ $(foreach F,$(GENERIC_FEATURES),\
         $(eval $(call HANDLE_GENERIC_FEATURE,$(F),$(shell echo $(F) | tr '[:upper:]' '[:lower:]'))) \
     ) \
 )
+
+MAGIC_ENABLE ?= yes
+ifeq ($(strip $(MAGIC_ENABLE)), yes)
+    SRCS += $(QMK_DIR)/quantum/process_keycode/process_magic.c
+    APP_DEFS += -DMAGIC_KEYCODE_ENABLE
+endif
