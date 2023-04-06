@@ -47,3 +47,8 @@ ifeq ($(strip $(MAGIC_ENABLE)), yes)
     SRCS += $(QMK_DIR)/quantum/process_keycode/process_magic.c
     APP_DEFS += -DMAGIC_KEYCODE_ENABLE
 endif
+
+DEBOUNCE_TYPE ?= sym_defer_g
+ifneq ($(strip $(DEBOUNCE_TYPE)), custom)
+    SRCS += $(QMK_DIR)/quantum/debounce/$(strip $(DEBOUNCE_TYPE)).c
+endif

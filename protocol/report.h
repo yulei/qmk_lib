@@ -134,7 +134,13 @@ enum desktop_usages {
 
 #define KEYBOARD_EPSIZE 8
 #define SHARED_EPSIZE 32
-#define MOUSE_EPSIZE 8
+
+#ifdef MOUSE_EXTENDED_REPORT
+#define MOUSE_EPSIZE 9
+#else
+#define MOUSE_EPSIZE 5
+#endif
+
 #define RAW_EPSIZE 32
 #define CONSOLE_EPSIZE 32
 #define MIDI_STREAM_EPSIZE 64

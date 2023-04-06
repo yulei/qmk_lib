@@ -9,19 +9,12 @@
 #include "qmk_driver.h"
 #include "keyboard.h"
 
-#ifdef RGB_ENABLE
-#include "rgb_led.h"
-#endif
-
 uint8_t keyboard_protocol = 1;
 
 void qmk_driver_init(void)
 {
     keyboard_setup();
     keyboard_init();
-    #ifdef RGB_ENABLE
-    rgb_led_init();
-    #endif
 }
 
 void qmk_driver_task(void)
