@@ -3,10 +3,13 @@ INCS += $(QMK_DIR)/quantum/process_keycode
 
 SPACE_CADET_ENABLE ?= yes
 GRAVE_ESC_ENABLE ?= yes
+
+ifeq (yes, $(strip $(VIAL_ENABLE)))
 TAP_DANCE_ENABLE ?= yes
 COMBO_ENABLE ?= yes
 DYNAMIC_TAPPING_TERM_ENABLE ?= yes
 KEY_LOCK_ENABLE ?= yes
+endif
 
 GENERIC_FEATURES = \
     CAPS_WORD \
