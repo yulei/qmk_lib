@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "host.h"
 #include "util.h"
 #include "debug.h"
-#include "digitizer.h"
+//#include "digitizer.h"
 
 #ifdef NKRO_ENABLE
 #    include "keycode_config.h"
@@ -118,6 +118,7 @@ void host_consumer_send(uint16_t report) {
     (*driver->send_consumer)(report);
 }
 
+#if 0
 void host_digitizer_send(digitizer_t *digitizer) {
     if (!driver) return;
 
@@ -135,6 +136,7 @@ void host_digitizer_send(digitizer_t *digitizer) {
 }
 
 __attribute__((weak)) void send_digitizer(report_digitizer_t *report) {}
+#endif
 
 void host_programmable_button_send(uint32_t report) {
     if (report == last_programmable_button_report) return;

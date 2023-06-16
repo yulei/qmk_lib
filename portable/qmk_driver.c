@@ -30,8 +30,9 @@ int8_t sendchar(uint8_t c)
 }
 
 #ifdef VIAL_ENABLE
-#include "tusb.h"
 #include "usb_common.h"
+#ifdef TINYUSB_ENABLE
+#include "tusb.h"
 
 void raw_hid_send(uint8_t *data, uint8_t length)
 {
@@ -40,4 +41,14 @@ void raw_hid_send(uint8_t *data, uint8_t length)
     } else {
     }
 }
+#else
+#include "amk_usb.h"
+void raw_hid_send(uint8_t *data, uint8_t length)
+{
+    if (amk_usb_itf_ready(HID_REPORT_ID_VIAL)) {
+        amk_usb_itf_send_report(HID_REPORT_ID_VIAL, data, length);
+    } else {
+    }
+}
+#endif
 #endif
