@@ -40,6 +40,9 @@ void matrix_init_custom(void)
     }
 }
 
+__attribute__((weak))
+bool matrix_scan_post_hook(matrix_row_t raw[]) {return false;}
+
 bool matrix_scan_custom(matrix_row_t raw[]) 
 {
     bool changed = false;
@@ -65,6 +68,7 @@ bool matrix_scan_custom(matrix_row_t raw[])
         gpio_write_pin(col_pins[col], 0);
     }
 
+    changed |= matrix_scan_post_hook(raw);
     if (changed) {
         for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
             matrix_scan_debug("row:%d-%x\n", row, matrix_get_row(row));
