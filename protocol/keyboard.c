@@ -435,6 +435,10 @@ void keyboard_init(void) {
  * This function is responsible for calling into other systems when they need to respond to electrical switch press events.
  * This is differnet than keycode events as no layer processing, or filtering occurs.
  */
+__attribute__((weak))
+void hook_matrix_change_rgb(uint8_t row, uint8_t col, bool pressed)
+{}
+
 void switch_events(uint8_t row, uint8_t col, bool pressed) {
 #if defined(LED_MATRIX_ENABLE)
     process_led_matrix(row, col, pressed);
@@ -442,8 +446,7 @@ void switch_events(uint8_t row, uint8_t col, bool pressed) {
 #if defined(RGB_MATRIX_ENABLE)
     process_rgb_matrix(row, col, pressed);
 #endif
-#if defined(AMK_RGB_MATRIX_ENABLE)
-    extern void hook_matrix_change_rgb(uint8_t row, uint8_t col, bool pressed);
+#if defined(RGB_ENABLE)
     hook_matrix_change_rgb(row, col, pressed);
 #endif
 }
