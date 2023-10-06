@@ -14,11 +14,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ctype.h>
-
-#include "quantum.h"
-
 #include "send_string.h"
+
+#include <ctype.h>
+#include <stdlib.h>
+
+#include "quantum_keycodes.h"
+#include "keycode.h"
+#include "action.h"
+#include "wait.h"
 
 // for delay report
 #include "usb_common.h"
@@ -181,7 +185,6 @@ void send_string_with_delay(const char *string, uint8_t interval) {
                 //    wait_ms(1);
                 uint16_t delay = (uint16_t)ms;
                 usb_send_report(HID_REPORT_ID_DELAY, &delay, sizeof(delay));
-
             }
         } else {
             send_char(ascii_code);

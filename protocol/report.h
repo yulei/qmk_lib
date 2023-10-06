@@ -38,11 +38,14 @@ enum hid_report_ids {
 /* Mouse buttons */
 #define MOUSE_BTN_MASK(n) (1 << (n))
 enum mouse_buttons {
-    MOUSE_BTN1 = (1 << 0),
-    MOUSE_BTN2 = (1 << 1),
-    MOUSE_BTN3 = (1 << 2),
-    MOUSE_BTN4 = (1 << 3),
-    MOUSE_BTN5 = (1 << 4)
+    MOUSE_BTN1 = MOUSE_BTN_MASK(0),
+    MOUSE_BTN2 = MOUSE_BTN_MASK(1),
+    MOUSE_BTN3 = MOUSE_BTN_MASK(2),
+    MOUSE_BTN4 = MOUSE_BTN_MASK(3),
+    MOUSE_BTN5 = MOUSE_BTN_MASK(4),
+    MOUSE_BTN6 = MOUSE_BTN_MASK(5),
+    MOUSE_BTN7 = MOUSE_BTN_MASK(6),
+    MOUSE_BTN8 = MOUSE_BTN_MASK(7)
 };
 
 /* Consumer Page (0x0C)
@@ -100,7 +103,9 @@ enum consumer_usages {
     AC_FORWARD             = 0x225,
     AC_STOP                = 0x226,
     AC_REFRESH             = 0x227,
-    AC_BOOKMARKS           = 0x22A
+    AC_BOOKMARKS           = 0x22A,
+    AC_MISSION_CONTROL     = 0x29F,
+    AC_LAUNCHPAD           = 0x2A0
 };
 
 /* Generic Desktop Page (0x01)
@@ -119,6 +124,19 @@ enum desktop_usages {
 
 // clang-format on
 
+#define KEYBOARD_EPSIZE 8
+#define SHARED_EPSIZE 32
+#define MOUSE_EPSIZE 8
+#define RAW_EPSIZE 32
+#define CONSOLE_EPSIZE 32
+#define MIDI_STREAM_EPSIZE 64
+#define CDC_NOTIFICATION_EPSIZE 8
+#define CDC_EPSIZE 16
+#define JOYSTICK_EPSIZE 8
+#define DIGITIZER_EPSIZE 8
+#define KEYBOARD_REPORT_BITS (SHARED_EPSIZE - 2)
+
+#if 0
 #define NKRO_SHARED_EP
 /* key report size(NKRO or boot mode) */
 #if defined(NKRO_ENABLE)
@@ -131,32 +149,9 @@ enum desktop_usages {
 #        undef NKRO_SHARED_EP
 #        undef MOUSE_SHARED_EP
 #    else
-
-#define KEYBOARD_EPSIZE 8
-#define SHARED_EPSIZE 32
-
-#ifdef MOUSE_EXTENDED_REPORT
-#define MOUSE_EPSIZE 9
-#else
-#define MOUSE_EPSIZE 5
-#endif
-
-#define RAW_EPSIZE 32
-#define CONSOLE_EPSIZE 32
-#define MIDI_STREAM_EPSIZE 64
-#define CDC_NOTIFICATION_EPSIZE 8
-#define CDC_EPSIZE 16
-#define JOYSTICK_EPSIZE 8
-#define DIGITIZER_EPSIZE 8
-#define KEYBOARD_REPORT_BITS (SHARED_EPSIZE - 2)
-
-#undef KEYBOARD_SHARED_EP
-#undef NKRO_SHARED_EP
-#undef MOUSE_SHARED_EP
-
-
-//#        error "NKRO not supported with this protocol"
+#        error "NKRO not supported with this protocol"
 #    endif
+#endif
 #endif
 
 #ifdef KEYBOARD_SHARED_EP
@@ -247,26 +242,30 @@ typedef struct {
 #ifdef DIGITIZER_SHARED_EP
     uint8_t report_id;
 #endif
-    uint8_t  tip : 1;
-    uint8_t  inrange : 1;
-    uint8_t  pad2 : 6;
+    bool     in_range : 1;
+    bool     tip : 1;
+    bool     barrel : 1;
+    uint8_t  reserved : 5;
     uint16_t x;
     uint16_t y;
 } __attribute__((packed)) report_digitizer_t;
 
 typedef struct {
-#if JOYSTICK_AXES_COUNT > 0
-#    if JOYSTICK_AXES_RESOLUTION > 8
-    int16_t axes[JOYSTICK_AXES_COUNT];
+#ifdef JOYSTICK_SHARED_EP
+    uint8_t report_id;
+#endif
+#if JOYSTICK_AXIS_COUNT > 0
+#    if JOYSTICK_AXIS_RESOLUTION > 8
+    int16_t axes[JOYSTICK_AXIS_COUNT];
 #    else
-    int8_t axes[JOYSTICK_AXES_COUNT];
+    int8_t axes[JOYSTICK_AXIS_COUNT];
 #    endif
 #endif
 
 #if JOYSTICK_BUTTON_COUNT > 0
     uint8_t buttons[(JOYSTICK_BUTTON_COUNT - 1) / 8 + 1];
 #endif
-} __attribute__((packed)) joystick_report_t;
+} __attribute__((packed)) report_joystick_t;
 
 /* keycode to system usage */
 static inline uint16_t KEYCODE2SYSTEM(uint8_t key) {
@@ -313,6 +312,10 @@ static inline uint16_t KEYCODE2CONSUMER(uint8_t key) {
             return AL_CALCULATOR;
         case KC_MY_COMPUTER:
             return AL_LOCAL_BROWSER;
+        case KC_CONTROL_PANEL:
+            return AL_CONTROL_PANEL;
+        case KC_ASSISTANT:
+            return AL_ASSISTANT;
         case KC_WWW_SEARCH:
             return AC_SEARCH;
         case KC_WWW_HOME:
@@ -331,6 +334,10 @@ static inline uint16_t KEYCODE2CONSUMER(uint8_t key) {
             return BRIGHTNESS_DOWN;
         case KC_WWW_FAVORITES:
             return AC_BOOKMARKS;
+        case KC_MISSION_CONTROL:
+            return AC_MISSION_CONTROL;
+        case KC_LAUNCHPAD:
+            return AC_LAUNCHPAD;
         default:
             return 0;
     }
