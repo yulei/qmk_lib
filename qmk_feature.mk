@@ -57,3 +57,15 @@ DEBOUNCE_TYPE ?= sym_defer_g
 ifneq ($(strip $(DEBOUNCE_TYPE)), custom)
     SRCS += $(QMK_DIR)/quantum/debounce/$(strip $(DEBOUNCE_TYPE)).c
 endif
+
+ifeq ($(strip $(RGB_MATRIX_ENABLE)), yes)
+    APP_DEFS += -DRGB_MATRIX_ENABLE
+    SRCS += $(QMK_DIR)/quantum/color.c
+    SRCS += $(QMK_DIR)/quantum/rgb_matrix/rgb_matrix.c
+    SRCS += $(QMK_DIR)/quantum/rgb_matrix/rgb_matrix_drivers.c
+    SRCS += $(QMK_DIR)/lib/lib8tion/lib8tion.c
+    INCS += $(QMK_DIR)/quantum/rgb_matrix
+    INCS += $(QMK_DIR)/quantum/rgb_matrix/animations
+    INCS += $(QMK_DIR)/quantum/rgb_matrix/animations/runners
+#    POST_CONFIG_H += $(QUANTUM_DIR)/rgb_matrix/post_config.h
+endif
