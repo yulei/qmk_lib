@@ -184,7 +184,11 @@ void send_string_with_delay(const char *string, uint8_t interval) {
                 //while (ms--)
                 //    wait_ms(1);
                 uint16_t delay = (uint16_t)ms;
+                #if defined(NRF52) || defined(NRF52840_XXAA)
+                nrf_usb_send_report(NRF_REPORT_ID_DELAY, &delay, sizeof(delay));
+                #else
                 usb_send_report(HID_REPORT_ID_DELAY, &delay, sizeof(delay));
+                #endif
             }
         } else {
             send_char(ascii_code);
@@ -196,7 +200,11 @@ void send_string_with_delay(const char *string, uint8_t interval) {
             //while (ms--)
             //    wait_ms(1);
             uint16_t delay = interval;
+            #if defined(NRF52) || defined(NRF52840_XXAA)
+            nrf_usb_send_report(NRF_REPORT_ID_DELAY, &delay, sizeof(delay));
+            #else
             usb_send_report(HID_REPORT_ID_DELAY, &delay, sizeof(delay));
+            #endif
         }
     }
 }

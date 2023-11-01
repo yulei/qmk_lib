@@ -24,3 +24,7 @@
 #define readPin(pin) gpio_read_pin(pin)
 
 //#define togglePin(pin) palToggleLine(pin)
+
+#if __has_include_next("gpio.h")
+#include_next "gpio.h"
+#endif
