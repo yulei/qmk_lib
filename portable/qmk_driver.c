@@ -22,11 +22,12 @@ void qmk_driver_task(void)
     keyboard_task();
 }
 
-#include "SEGGER_RTT.h"
+//#include "SEGGER_RTT.h"
 
 int8_t sendchar(uint8_t c)
 {
-    return (int8_t)SEGGER_RTT_PutChar(0, c);
+    return 1;
+    //return (int8_t)SEGGER_RTT_PutChar(0, c);
 }
 
 __attribute__((weak))
