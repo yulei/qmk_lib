@@ -58,3 +58,12 @@ void raw_hid_send(uint8_t *data, uint8_t length)
 }
 #endif
 #endif
+
+// for delay report
+#include "usb_common.h"
+#include "usb_interface.h"
+
+void amk_report_delay(uint16_t delay)
+{
+   usb_send_report(HID_REPORT_ID_DELAY, &delay, sizeof(delay));
+}
