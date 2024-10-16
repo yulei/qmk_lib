@@ -477,6 +477,8 @@ void dynamic_keymap_macro_send(uint8_t id) {
         return;
     }
 
+    usb_send_report(HID_REPORT_ID_MACRO_BEGIN, &id, sizeof(id));
+
     // Skip N null characters
     // p will then point to the Nth macro
     p         = (void *)(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR);
@@ -560,4 +562,5 @@ void dynamic_keymap_macro_send(uint8_t id) {
             send_string_with_delay(data, DYNAMIC_KEYMAP_MACRO_DELAY);
         }
     }
+    usb_send_report(HID_REPORT_ID_MACRO_END, &id, sizeof(id));
 }
