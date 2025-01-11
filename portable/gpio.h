@@ -3,6 +3,7 @@
 
 #include "pin_defs.h"
 
+#if 0
 #define setPinInput(pin) gpio_set_pin_input_floating((pin))
 #define setPinInputHigh(pin) gpio_set_input_pullup((pin))
 #define setPinInputLow(pin) gpio_set_input_pulldown((pin))
@@ -24,6 +25,7 @@
 #define readPin(pin) gpio_read_pin(pin)
 
 //#define togglePin(pin) palToggleLine(pin)
+#endif
 
 #if __has_include_next("gpio.h")
 #include_next "gpio.h"
