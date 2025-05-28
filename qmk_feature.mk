@@ -3,7 +3,8 @@ INCS += $(QMK_DIR)/quantum/process_keycode
 
 SPACE_CADET_ENABLE ?= yes
 GRAVE_ESC_ENABLE ?= yes
-BOOTMAGIC ?= yes
+BOOTMAGIC_ENABLE ?= yes
+MAGIC_ENABLE ?= yes
 
 ifeq (yes, $(strip $(VIAL_ENABLE)))
 TAP_DANCE_ENABLE ?= yes
@@ -15,6 +16,7 @@ endif
 
 GENERIC_FEATURES = \
     BOOTMAGIC \
+    MAGIC \
     CAPS_WORD \
     COMBO \
     COMMAND \
@@ -40,7 +42,9 @@ GENERIC_FEATURES = \
 define HANDLE_GENERIC_FEATURE
     $$(info "Processing: $1_ENABLE $2.c")
     SRCS += $$(wildcard $$(QMK_DIR)/quantum/process_keycode/process_$2.c)
+    SRCS += $$(wildcard $$(QMK_DIR)/quantum/$2/$2.c)
     SRCS += $$(wildcard $$(QMK_DIR)/quantum/$2.c)
+    INCS += $$(wildcard $$(QMKDIR)/quantum/$2/)
     APP_DEFS += -D$1_ENABLE
 endef
 
@@ -49,12 +53,6 @@ $(foreach F,$(GENERIC_FEATURES),\
         $(eval $(call HANDLE_GENERIC_FEATURE,$(F),$(shell echo $(F) | tr '[:upper:]' '[:lower:]'))) \
     ) \
 )
-
-MAGIC_ENABLE ?= yes
-ifeq ($(strip $(MAGIC_ENABLE)), yes)
-    SRCS += $(QMK_DIR)/quantum/process_keycode/process_magic.c
-    APP_DEFS += -DMAGIC_KEYCODE_ENABLE
-endif
 
 DEBOUNCE_TYPE ?= sym_defer_g
 ifneq ($(strip $(DEBOUNCE_TYPE)), custom)
